@@ -1,541 +1,384 @@
 <!DOCTYPE html>
-<html lang="zxx">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="description" content="Anime Template">
-    <meta name="keywords" content="Anime, unica, creative, html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Sociopath Legion | Real Gamerz</title>
+    <title>Configurable Word Guess Game</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom CSS to ensure consistent font and focused mobile experience */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #121213; /* Dark background */
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&display=swap"
-    rel="stylesheet">
+        /* Styling for the individual tiles */
+        .tile {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            border: 2px solid #3a3a3c; /* Default border color */
+            border-radius: 6px;
+            transition: all 0.3s ease-in-out;
+            user-select: none;
+        }
 
-    <!-- Css Styles -->
-    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
-    <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css">
-    <link rel="stylesheet" href="css/elegant-icons.css" type="text/css">
-    <link rel="stylesheet" href="css/plyr.css" type="text/css">
-    <link rel="stylesheet" href="css/nice-select.css" type="text/css">
-    <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css">
-    <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
-    <link rel="stylesheet" href="css/style.css" type="text/css">
+        /* Animation for flipping the tile */
+        .tile.flip {
+            transform: rotateX(90deg);
+        }
+        
+        /* The animation classes for coloring tiles */
+        .tile-correct {
+            background-color: #6aaa64 !important; /* Green */
+            border-color: #6aaa64 !important;
+            color: white;
+        }
+        .tile-present {
+            background-color: #c9b458 !important; /* Yellow */
+            border-color: #c9b458 !important;
+            color: white;
+        }
+        .tile-absent {
+            background-color: #3a3a3c !important; /* Dark Gray */
+            border-color: #3a3a3c !important;
+            color: white;
+        }
+
+        /* Ensure the grid fits well on mobile */
+        #game-grid {
+            max-width: 90vw;
+            width: 350px; /* Max width for comfortable play */
+            padding: 1rem;
+        }
+
+        /* Styling for the virtual keyboard keys */
+        .key {
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #818384;
+            color: white;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.1s;
+        }
+        .key-wide {
+            flex-grow: 1.5; /* Makes Enter and Backspace wider */
+        }
+        .key:active {
+            filter: brightness(1.2);
+        }
+
+        /* Keyboard coloring for feedback */
+        .key.correct { background-color: #6aaa64; }
+        .key.present { background-color: #c9b458; }
+        .key.absent { background-color: #3a3a3c; }
+
+    </style>
 </head>
+<body class="p-4">
 
-<body>
-    <!-- Page Preloder -->
-    <div id="preloder">
-        <div class="loader"></div>
-    </div>
-
-    <!-- Header Section Begin -->
-    <header class="header">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-2">
-                    <div class="header__logo">
-                        <a href="./index.html">
-                            <img src="img/standard.gif" alt="">
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-8">
-                    <div class="header__nav">
-                        <nav class="header__menu mobile-menu">
-                            <ul>
-                                <li class="active"><a href="./index.html">Homepage</a></li>
-                                <li><a href="./categories.html">Categories <span class="arrow_carrot-down"></span></a>
-                                    <ul class="dropdown">
-                                        <li><a href="./zephyr-cheats.html">Zephyr-Cheats</a></li>
-                                        <li><a href="./signup.html">Sign Up [server-down]</a></li>
-                                        <li><a href="./login.html">Login [server-down]</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="#">Contacts</a></li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-                <div class="col-lg-2">
-                    <div class="header__right">
-                        <a href="#" class="search-switch"><span class="icon_search"></span></a>
-                        <a href="./login.html"><span class="icon_profile"></span></a>
-                    </div>
-                </div>
-            </div>
-            <div id="mobile-menu-wrap"></div>
-        </div>
+    <!-- Header -->
+    <header class="w-full max-w-lg mx-auto text-center border-b border-gray-700 pb-3 mb-6">
+        <h1 class="text-3xl font-bold tracking-wider">WORD GUESS</h1>
     </header>
-    <!-- Header End -->
 
-    <!-- Hero Section Begin -->
-    <section class="hero">
-        <div class="container">
-            <div class="hero__slider owl-carousel">
-                <div class="hero__items set-bg" data-setbg="img/hero/gta.jpg">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="hero__text">
-                                <div class="label">Open World</div>
-                                <h2>Grand Theft Auto 5/Online</h2>
-                                <p>Open-world action-adventure game set in the fictional city of Los Santos, offering a gripping storyline, dynamic characters, and endless exploration opportunities.</p>
-                                <a href="https://store.steampowered.com/app/271590/Grand_Theft_Auto_V/"><span>Buy Now</span> <i class="fa fa-angle-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="hero__items set-bg" data-setbg="img/hero/valorant.png">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="hero__text">
-                                <div class="label">First-Person Shooter Game</div>
-                                <h2>Valorant</h2>
-                                <p>Owned by RIOT GAMES Inc. available accross multiple platform PC, Console and Mobile [comming soon]</p>
-                                <a href="https://playvalorant.com/en-gb/platform-selection/"><span>Play Free</span> <i class="fa fa-angle-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="hero__items set-bg" data-setbg="img/hero/minecraft.png">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="hero__text">
-                                <div class="label">Survival/Creative</div>
-                                <h2>Minecraft</h2>
-                                <p>A game to show your creative skill or survival skills. Available accross multiple platform and contains 500+ game modes.</p>
-                                <a href="https://www.minecraft.net/en-us/login?view=msa&return_url=/en-us/store/checkout/minecraft-deluxe-collection-pc"><span>Buy Now</span> <i class="fa fa-angle-right"></i></a>
-                                <a href="https://skmedix.pl/downloads"><span>Play Free</span> <i class="fa fa-angle-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- Message Box for Alerts -->
+    <div id="message-box" class="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-300 opacity-0 pointer-events-none">
+        <div class="bg-white text-gray-900 px-4 py-2 rounded-lg shadow-xl font-semibold">
+            <span id="message-text"></span>
         </div>
-    </section>
-    <!-- Hero Section End -->
+    </div>
 
-    <!-- Product Section Begin -->
-    <section class="product spad">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8">
-                    <div class="trending__product">
-                        <div class="row">
-                            <div class="col-lg-8 col-md-8 col-sm-8">
-                                <div class="section-title">
-                                    <h4>Partner Program</h4>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4">
-                                <div class="btn__all">
-                                    <a href="#" class="primary-btn">View All <span class="arrow_right"></span></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/trending/trend-1.jpg">
-                                        <div class="ep">Verified ✓</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> 50+</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 2000+</div>
-                                    </div>
-                                    <div class="product__item__text">
-                                        <ul>
-                                            <li>Valorant</li>
-                                            <li>GTA 5/Online</li>
-                                        </ul>
-                                        <h5><a href="https://youtube.com/@bagiraval?si=ykk_xCX35yY-q-SP">Bagira ツ | Short clips, big plays. Your daily dose of Valorant action in bite-sized videos 🔥!
-                                            Jett Main 🤙</a></h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/trending/trend-2.jpg">
-                                        <div class="ep">Verified ✓</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> ?</div>
-                                        <div class="view"><i class="fa fa-eye"></i> ?</div>
-                                    </div>
-                                    <div class="product__item__text">
-                                        <ul>
-                                            <li>?</li>
-                                            <li>?</li>
-                                        </ul>
-                                        <h5><a href="#">Unavailable! Sorry</a></h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/trending/trend-3.jpg">
-                                        <div class="ep">Verified ✓</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> ?</div>
-                                        <div class="view"><i class="fa fa-eye"></i> ?</div>
-                                    </div>
-                                    <div class="product__item__text">
-                                        <ul>
-                                            <li>?</li>
-                                            <li>?</li>
-                                        </ul>
-                                        <h5><a href="#">Unavailable! Sorry</a></h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/trending/trend-4.jpg">
-                                        <div class="ep">Verified ✓</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> ?</div>
-                                        <div class="view"><i class="fa fa-eye"></i> ?</div>
-                                    </div>
-                                    <div class="product__item__text">
-                                        <ul>
-                                            <li>?</li>
-                                            <li>?</li>
-                                        </ul>
-                                        <h5><a href="#">Unavailable! Sorry</a></h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/trending/trend-5.jpg">
-                                        <div class="ep">Verified ✓</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> ?</div>
-                                        <div class="view"><i class="fa fa-eye"></i> ?</div>
-                                    </div>
-                                    <div class="product__item__text">
-                                        <ul>
-                                            <li>?</li>
-                                            <li>?</li>
-                                        </ul>
-                                        <h5><a href="#">Unavailable! Sorry</a></h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/trending/trend-6.jpg">
-                                        <div class="ep">Verified ✓</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> ?</div>
-                                        <div class="view"><i class="fa fa-eye"></i> ?</div>
-                                    </div>
-                                    <div class="product__item__text">
-                                        <ul>
-                                            <li>?</li>
-                                            <li>?</li>
-                                        </ul>
-                                        <h5><a href="#">Unavailable! Sorry</a></h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="popular__product">
-                        <div class="row">
-                            <div class="col-lg-8 col-md-8 col-sm-8">
-                                <div class="section-title">
-                                    <h4>Popular Games</h4>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4">
-                                <div class="btn__all">
-                                    <a href="#" class="primary-btn">View All <span class="arrow_right"></span></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/popular/popular-1.png">
-                                        <div class="ep">18+</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> 17,70,744</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 205M+</div>
-                                    </div>
-                                    <div class="product__item__text">
-                                        <ul>
-                                            <li>Open-World</li>
-                                            <li>Action</li>
-                                        </ul>
-                                        <h5><a href="https://store.steampowered.com/app/271590/Grand_Theft_Auto_V/">Grand Theft Auto 5/Grand Theft Auto Online</a></h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/popular/popular-2.jpg">
-                                        <div class="ep">16+</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> 96,590</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 19.47M+</div>
-                                    </div>
-                                    <div class="product__item__text">
-                                        <ul>
-                                            <li>Shooting</li>
-                                            <li>5v5</li>
-                                        </ul>
-                                        <h5><a href="https://playvalorant.com/en-gb/platform-selection/">Riot Games INC. | Valorant</a></h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/popular/popular-5.jpg">
-                                        <div class="ep">18+</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> 8,12,441</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 20M+</div>
-                                    </div>
-                                    <div class="product__item__text">
-                                        <ul>
-                                            <li>Active</li>
-                                            <li>Movie</li>
-                                        </ul>
-                                        <h5><a href="https://store.steampowered.com/app/2358720/Black_Myth_Wukong/">Black-Mith Wukong</a></h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/popular/popular-4.png">
-                                        <div class="ep">18+</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> 6,08,088</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 67M+</div>
-                                    </div>
-                                    <div class="product__item__text">
-                                        <ul>
-                                            <li>Open World</li>
-                                            <li>Action</li>
-                                        </ul>
-                                        <h5><a href="https://store.steampowered.com/app/1174180/Red_Dead_Redemption_2/">Red Dead Redemption 2</a></h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="product__item">
-                                    
+    <!-- Game Grid Container -->
+    <main id="game-grid" class="grid gap-1.5"></main>
 
-                                        <div class="product__item__pic set-bg" data-setbg="img/popular/popular-6.jpg">
-                                        <div class="ep">13+</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> 9,78,098</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 200M+</div>
-                                    </div>
-                                    <div class="product__item__text">
-                                        <ul>
-                                         
-                                            <li>Shooter</li>
-                                            <li>3rd Person</li>
-                                        </ul>
-                                        <h5><a href="https://store.epicgames.com/en-US/p/fortnite">Fortnite</a></h5>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/popular/popular-3.jpg">
-                                        <div class="ep">8+</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> 2.3M</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 299M+</div>
-                                </div>
-                                <div class="product__item__text">
-                                    <ul>
-                                        <li>Realistic</li>
-                                        <li>Action</li>
-                                    </ul>
-                                    
-                                    <h5><a href="https://www.minecraft.net/en-us/login?view=msa&return_url=/en-us/store/checkout/minecraft-deluxe-collection-pc">Minecraft</a></h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="live__product">
-                        <div class="row">
-                            <div class="col-lg-8 col-md-8 col-sm-8">
-                                <div class="section-title">
-                                    <h4>Zephyr Cheats | Sociopath Store</h4>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4">
-                                <div class="btn__all">
-                                    <a href="./zephyr-cheats.html" class="primary-btn">View All <span class="arrow_right"></span></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/live/live-1.jpg">
-                                        <div class="ep">Verified ✓</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> 102k+</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 9M+</div>
-                                    </div>
-                                    <div class="product__item__text">
-                                        <ul>
-                                            <li>Gta Online</li>
-                                            <li>10/10</li>
-                                        </ul>
-                                        <h5><a href="./zephyr-cheats.html">Two-Take-One</a></h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/live/live-2.jpg">
-                                        <div class="ep">Verified ✓</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> 92k+</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 6M+</div>
-                                    </div>
-                                    <div class="product__item__text">
-                                        <ul>
-                                            <li>Gta Online</li>
-                                            <li>9.5/10</li>
-                                        </ul>
-                                        <h5><a href="./zephyr-cheats.html">Ethreal Mod Menu</a></h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/live/live-3.png">
-                                        <div class="ep">Verified ✓</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> 84k+</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 4.7M+</div>
-                                    </div>
-                                    <div class="product__item__text">
-                                        <ul>
-                                            <li>Gta Online</li>
-                                            <li>8/10</li>
-                                        </ul>
-                                        <h5><a href="./zephyr-cheats.html">X-Force Mod Menu</a></h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/live/live-4.png">
-                                        <div class="ep">Verified ✓</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> 97k+</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 7M+</div>
-                                    </div>
-                                    <div class="product__item__text">
-                                        <ul>
-                                            <li>Gta Online</li>
-                                            <li>9.8/10</li>
-                                        </ul>
-                                        <h5><a href="./zephyr-cheats.html">Cherax Mod Menu</a></h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/live/live-5.png">
-                                        <div class="ep">Verified ✓</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> 68k+</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 3.9M+</div>
-                                    </div>
-                                    <div class="product__item__text">
-                                        <ul>
-                                            <li>Gta Online</li>
-                                            <li>7.6/10</li>
-                                        </ul>
-                                        <h5><a href="./zephyr-cheats.html">Stand Mod Menu</a></h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/live/live-6.jpg">
-                                        <div class="ep">Verified ✓</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> 34k+</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 2.1M+</div>
-                                    </div>
-                                    <div class="product__item__text">
-                                        <ul>
-                                            <li>Gta Online</li>
-                                            <li>8.5/10</li>
-                                        </ul>
-                                        <h5><a href="./zephyr-cheats.html">Ovix Mod Menu</a></h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-sm-8">
-                    <div class="product__sidebar">
-                        <div class="product__sidebar__view">
-                            <div class="section-title">
-
+    <!-- Virtual Keyboard -->
+    <div id="keyboard" class="w-full max-w-lg mt-8 space-y-2">
+        <!-- Row 1 -->
+        <div class="flex justify-center gap-1.5">
+            <div data-key="q" class="key w-8">Q</div>
+            <div data-key="w" class="key w-8">W</div>
+            <div data-key="e" class="key w-8">E</div>
+            <div data-key="r" class="key w-8">R</div>
+            <div data-key="t" class="key w-8">T</div>
+            <div data-key="y" class="key w-8">Y</div>
+            <div data-key="u" class="key w-8">U</div>
+            <div data-key="i" class="key w-8">I</div>
+            <div data-key="o" class="key w-8">O</div>
+            <div data-key="p" class="key w-8">P</div>
+        </div>
+        <!-- Row 2 -->
+        <div class="flex justify-center gap-1.5 ml-4 mr-4">
+            <div data-key="a" class="key w-8">A</div>
+            <div data-key="s" class="key w-8">S</div>
+            <div data-key="d" class="key w-8">D</div>
+            <div data-key="f" class="key w-8">F</div>
+            <div data-key="g" class="key w-8">G</div>
+            <div data-key="h" class="key w-8">H</div>
+            <div data-key="j" class="key w-8">J</div>
+            <div data-key="k" class="key w-8">K</div>
+            <div data-key="l" class="key w-8">L</div>
+        </div>
+        <!-- Row 3 -->
+        <div class="flex justify-center gap-1.5">
+            <div data-key="Enter" class="key key-wide w-16">Enter</div>
+            <div data-key="z" class="key w-8">Z</div>
+            <div data-key="x" class="key w-8">X</div>
+            <div data-key="c" class="key w-8">C</div>
+            <div data-key="v" class="key w-8">V</div>
+            <div data-key="b" class="key w-8">B</div>
+            <div data-key="n" class="key w-8">N</div>
+            <div data-key="m" class="key w-8">M</div>
+            <div data-key="Backspace" class="key key-wide w-16">
+                <!-- Backspace/Delete Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path><line x1="18" y1="9" x2="12" y2="15"></line><line x1="12" y1="9" x2="18" y2="15"></line></svg>
             </div>
         </div>
     </div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- Product Section End -->
 
-<!-- Footer Section Begin -->
-<footer class="footer">
-    <div class="page-up">
-        <a href="#" id="scrollToTopButton"><span class="arrow_carrot-up"></span></a>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-3">
-                <div class="footer__logo">
-                    <a href="./index.html"><img src="img/logo.png" alt=""></a>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="footer__nav">
-                    <ul>
-                        <li class="active"><a href="./index.html">Homepage</a></li>
-                        <li><a href="./error.html">Categories</a></li>
-                        <li><a href="./error.html">Our Blog</a></li>
-                        <li><a href="#">Contacts</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved.</a>
-                  <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+    <script>
+        // =============================================================
+        // GAME CONFIGURATION (Change these values to customize the game)
+        // =============================================================
 
-              </div>
-          </div>
-      </div>
-  </footer>
-  <!-- Footer Section End -->
+        // 1. The word the user must guess. MUST match WORD_LENGTH.
+        const TARGET_WORD = "CLOUD"; 
 
-  <!-- Search model Begin -->
-  <div class="search-model">
-    <div class="h-100 d-flex align-items-center justify-content-center">
-        <div class="search-close-switch"><i class="icon_close"></i></div>
-        <form class="search-model-form">
-            <input type="text" id="search-input" placeholder="Search here.....">
-        </form>
-    </div>
-</div>
-<!-- Search model end -->
+        // 2. The required length of the word (3 to 7 recommended).
+        const WORD_LENGTH = TARGET_WORD.length;
 
-<!-- Js Plugins -->
-<script src="js/jquery-3.3.1.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/player.js"></script>
-<script src="js/jquery.nice-select.min.js"></script>
-<script src="js/mixitup.min.js"></script>
-<script src="js/jquery.slicknav.js"></script>
-<script src="js/owl.carousel.min.js"></script>
-<script src="js/main.js"></script>
+        // 3. The maximum number of guesses allowed (e.g., 6).
+        const MAX_GUESSES = 6; 
+        
+        // =============================================================
+        // GAME VARIABLES (Do not change below here unless debugging)
+        // =============================================================
+        const gameGrid = document.getElementById('game-grid');
+        const keyboard = document.getElementById('keyboard');
+        let currentGuess = "";
+        let currentRow = 0;
+        let gameOver = false;
 
+        // Utility to display temporary messages
+        function showMessage(text, duration = 1500) {
+            const box = document.getElementById('message-box');
+            document.getElementById('message-text').textContent = text;
+            box.style.opacity = '1';
+            box.style.pointerEvents = 'auto';
 
+            setTimeout(() => {
+                box.style.opacity = '0';
+                box.style.pointerEvents = 'none';
+            }, duration);
+        }
+
+        // 1. Setup the Game Grid
+        function setupGrid() {
+            gameGrid.style.gridTemplateColumns = `repeat(${WORD_LENGTH}, 1fr)`;
+            gameGrid.style.gridTemplateRows = `repeat(${MAX_GUESSES}, 1fr)`;
+            gameGrid.style.gap = '8px'; // Adjust gap for better look
+
+            for (let i = 0; i < MAX_GUESSES * WORD_LENGTH; i++) {
+                const tile = document.createElement('div');
+                tile.classList.add('tile');
+                tile.id = `tile-${i}`;
+                gameGrid.appendChild(tile);
+            }
+        }
+
+        // 2. Handle User Input (Physical or Virtual Key Press)
+        function handleKey(key) {
+            if (gameOver) return;
+
+            key = key.toLowerCase();
+
+            if (key === 'backspace' || key === 'delete') {
+                handleDelete();
+            } else if (key === 'enter') {
+                handleEnter();
+            } else if (key.match(/^[a-z]$/) && currentGuess.length < WORD_LENGTH) {
+                handleLetter(key);
+            }
+        }
+
+        function handleLetter(key) {
+            currentGuess += key;
+            const tileIndex = currentRow * WORD_LENGTH + currentGuess.length - 1;
+            const tile = document.getElementById(`tile-${tileIndex}`);
+            if (tile) {
+                tile.textContent = key.toUpperCase();
+                tile.classList.add('scale-110');
+                setTimeout(() => tile.classList.remove('scale-110'), 100);
+            }
+        }
+
+        function handleDelete() {
+            if (currentGuess.length > 0) {
+                const tileIndex = currentRow * WORD_LENGTH + currentGuess.length - 1;
+                const tile = document.getElementById(`tile-${tileIndex}`);
+                if (tile) {
+                    tile.textContent = '';
+                }
+                currentGuess = currentGuess.slice(0, -1);
+            }
+        }
+
+        function handleEnter() {
+            if (currentGuess.length !== WORD_LENGTH) {
+                showMessage(`Word must be ${WORD_LENGTH} letters long!`);
+                return;
+            }
+
+            // Note: In a real Wordle app, you would check if the word is in a dictionary here.
+            // For this self-contained version, we skip the dictionary check.
+
+            checkGuess(currentGuess.toUpperCase());
+        }
+
+        // 3. Check the Guess and Update UI
+        function checkGuess(guess) {
+            const target = TARGET_WORD.toUpperCase();
+            const guessArray = Array.from(guess);
+            const targetArray = Array.from(target);
+            const results = Array(WORD_LENGTH).fill('absent');
+
+            // Copy of target letters we haven't matched yet
+            let targetMap = {};
+            targetArray.forEach(char => {
+                targetMap[char] = (targetMap[char] || 0) + 1;
+            });
+
+            // 1. Check for CORRECT (Green) letters first
+            for (let i = 0; i < WORD_LENGTH; i++) {
+                if (guessArray[i] === targetArray[i]) {
+                    results[i] = 'correct';
+                    targetMap[guessArray[i]]--; // Consume this letter from the target map
+                }
+            }
+
+            // 2. Check for PRESENT (Yellow) letters
+            for (let i = 0; i < WORD_LENGTH; i++) {
+                if (results[i] !== 'correct') {
+                    const char = guessArray[i];
+                    if (targetMap[char] > 0) {
+                        results[i] = 'present';
+                        targetMap[char]--; // Consume this letter
+                    }
+                }
+            }
+
+            // Apply coloring and animations
+            animateTiles(guess, results);
+
+            // Check for Win/Loss after animation
+            setTimeout(() => {
+                if (guess === target) {
+                    gameOver = true;
+                    showMessage("You Won! 🎉", 3000);
+                } else if (currentRow === MAX_GUESSES - 1) {
+                    gameOver = true;
+                    showMessage(`Game Over! The word was: ${target}`, 5000);
+                }
+
+                if (!gameOver) {
+                    currentRow++;
+                    currentGuess = "";
+                }
+            }, 500 * WORD_LENGTH); // Wait for all animations to complete
+        }
+
+        // 4. Animation and Coloring
+        function animateTiles(guess, results) {
+            const startTileIndex = currentRow * WORD_LENGTH;
+
+            for (let i = 0; i < WORD_LENGTH; i++) {
+                const tile = document.getElementById(`tile-${startTileIndex + i}`);
+                const letter = guess[i];
+                const result = results[i];
+
+                // Add flip animation
+                setTimeout(() => {
+                    tile.classList.add('flip');
+
+                    // After the tile "flips" (halfway through the animation) apply color
+                    setTimeout(() => {
+                        tile.classList.remove('flip');
+                        tile.classList.add(`tile-${result}`);
+                        updateKeyboard(letter, result);
+                    }, 250); // Half the transition duration
+                }, i * 500); // Stagger the animations
+            }
+        }
+        
+        // 5. Update the Virtual Keyboard colors
+        function updateKeyboard(key, status) {
+            const keyElement = document.querySelector(`#keyboard [data-key="${key.toLowerCase()}"]`);
+            if (keyElement) {
+                // If the key is already marked 'correct', don't downgrade it.
+                if (keyElement.classList.contains('correct')) return;
+                
+                // If the key is already marked 'present', only upgrade it to 'correct'.
+                if (keyElement.classList.contains('present') && status === 'absent') return;
+
+                // Remove existing status classes
+                keyElement.classList.remove('correct', 'present', 'absent');
+                
+                // Add the new status class
+                keyElement.classList.add(status);
+            }
+        }
+
+        // 6. Initialize Event Listeners
+        function initializeListeners() {
+            // Physical Keyboard Listener
+            document.addEventListener('keydown', (e) => {
+                handleKey(e.key);
+            });
+
+            // Virtual Keyboard Listener (handles both touch and mouse click)
+            keyboard.addEventListener('click', (e) => {
+                const key = e.target.closest('.key');
+                if (key) {
+                    const keyValue = key.getAttribute('data-key');
+                    handleKey(keyValue);
+                }
+            });
+        }
+
+        // Start the game on load
+        window.onload = function() {
+            // Configuration validation
+            if (TARGET_WORD.length !== WORD_LENGTH) {
+                showMessage("ERROR: TARGET_WORD length must match WORD_LENGTH setting!", 5000);
+                return;
+            }
+            if (!/^[a-zA-Z]+$/.test(TARGET_WORD)) {
+                showMessage("ERROR: TARGET_WORD must only contain letters!", 5000);
+                return;
+            }
+
+            setupGrid();
+            initializeListeners();
+        };
+
+    </script>
 </body>
-
 </html>
+
